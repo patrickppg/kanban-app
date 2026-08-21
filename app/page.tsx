@@ -1,6 +1,221 @@
 "use client"
 
+import { FocusEvent, KeyboardEvent } from "react"
+
 export default function Board() {
+
+  function handleKeyDown(e: KeyboardEvent) {
+    if (
+      e.key !== "ArrowUp" &&
+      e.key !== "ArrowDown" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
+      e.key !== "Home" &&
+      e.key !== "End" &&
+      e.key !== "PageUp" &&
+      e.key !== "PageDown"
+    ) return
+    if (e.isComposing) return
+    if (!(e.target instanceof HTMLElement)) return
+    if (
+      e.target.dataset.type !== "task-board" &&
+      e.target.dataset.type !== "task-list" &&
+      e.target.dataset.type !== "task-item"
+    ) return
+
+
+
+    e.preventDefault()
+    switch (e.key) {
+      case "ArrowUp": {
+        if (e.target.dataset.type === "task-list") {
+          if (e.target.dataset.focusTaskId) {
+            document
+              .getElementById(e.target.dataset.focusTaskId)
+              ?.focus()
+          } else {
+            e.target
+              .querySelector<HTMLElement>("[data-type='task-item']")
+              ?.focus()
+          }
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          if (!(e.target.previousElementSibling instanceof HTMLElement)) return
+          if (e.target.previousElementSibling.dataset.type === "task-item") {
+            e.target.previousElementSibling.focus()
+          }
+        }
+        break
+      }
+
+
+
+      case "ArrowDown": {
+        if (e.target.dataset.type === "task-list") {
+          if (e.target.dataset.focusTaskId) {
+            document
+              .getElementById(e.target.dataset.focusTaskId)
+              ?.focus()
+          } else {
+            e.target
+              .querySelector<HTMLElement>("[data-type='task-item']")
+              ?.focus()
+          }
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          if (!(e.target.nextElementSibling instanceof HTMLElement)) return
+          if (e.target.nextElementSibling.dataset.type === "task-item") {
+            e.target.nextElementSibling.focus()
+          }
+        }
+        break
+      }
+
+
+
+      case "ArrowLeft": {
+        if (e.altKey) {
+          if (e.currentTarget === e.target) return
+          let currentList = e.target.closest<HTMLElement>("[data-type='task-list']")!
+          while (currentList.previousElementSibling) {
+            const previousList = currentList.previousElementSibling
+            if (!(previousList instanceof HTMLElement)) break
+            currentList = previousList
+            if (currentList.childElementCount === 1) continue
+            currentList.focus()
+            break
+          }
+          return
+        }
+
+        if (e.target.dataset.type === "task-list") {
+          if (!(e.target.previousElementSibling instanceof HTMLElement)) return
+          if (e.target.previousElementSibling.dataset.type === "task-list") {
+            e.target.previousElementSibling.focus()
+          }
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          const parentList = e.target.closest<HTMLElement>("[data-type='task-list']")!
+          if (!(parentList.previousElementSibling instanceof HTMLElement)) return
+          if (parentList.previousElementSibling.dataset.type === "task-list") {
+            parentList.previousElementSibling.focus()
+          }
+        }
+        break
+      }
+
+
+
+      case "ArrowRight": {
+        if (e.altKey) {
+          if (e.currentTarget === e.target) return
+          let currentList = e.target.closest<HTMLElement>("[data-type='task-list']")!
+          while (currentList.nextElementSibling) {
+            const nextList = currentList.nextElementSibling
+            if (!(nextList instanceof HTMLElement)) break
+            currentList = nextList
+            if (currentList.childElementCount === 1) continue
+            currentList.focus()
+            break
+          }
+          return
+        }
+
+        if (e.target.dataset.type === "task-list") {
+          if (!(e.target.nextElementSibling instanceof HTMLElement)) return
+          if (e.target.nextElementSibling.dataset.type === "task-list") {
+            e.target.nextElementSibling.focus()
+          }
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          const parentList = e.target.closest<HTMLElement>("[data-type='task-list']")!
+          if (!(parentList.nextElementSibling instanceof HTMLElement)) return
+          if (parentList.nextElementSibling.dataset.type === "task-list") {
+            parentList.nextElementSibling.focus()
+          }
+        }
+        break
+      }
+      
+
+
+      case "Home": {
+        if (e.repeat) return
+
+        if (e.altKey) {
+          if (e.currentTarget === e.target) return
+          if (e.currentTarget.firstElementChild instanceof HTMLElement) {
+            e.currentTarget.firstElementChild.focus()
+          }
+          return
+        }
+
+        if (e.target.dataset.type === "task-list") {
+          e.target
+            .querySelector<HTMLElement>("[data-type='task-item']")
+            ?.focus()
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          e.target
+            .closest<HTMLElement>("[data-type='task-list']")!
+            .querySelector<HTMLElement>("[data-type='task-item']")!
+            .focus()
+        }
+        break
+      }
+
+
+
+      case "End": {
+        if (e.repeat) return
+
+        if (e.altKey) {
+          if (e.currentTarget === e.target) return
+          if (e.currentTarget.lastElementChild instanceof HTMLElement) {
+            e.currentTarget.lastElementChild.focus()
+          }
+          return
+        }
+
+        if (e.target.dataset.type === "task-list") {
+          if (e.target.childElementCount > 1) {
+            (e.target.lastElementChild as HTMLElement).focus()
+          }
+        }
+        
+        else if (e.target.dataset.type === "task-item") {
+          (e.target
+            .closest<HTMLElement>("[data-type='task-list']")!
+            .lastElementChild as HTMLElement)
+            .focus()
+        }
+        break
+      }
+    }
+  }
+
+  function handleFocus(e: FocusEvent) {
+    if (!(e.target instanceof HTMLElement)) return
+    if (
+      e.target.dataset.type === "task-list" ||
+      e.target.dataset.type === "task-item"
+    ) {
+      const tabbableObject = e.currentTarget.querySelector<HTMLElement>("[tabindex='0']")
+      if (tabbableObject) tabbableObject.tabIndex = -1
+      e.target.tabIndex = 0
+    }
+    if (e.target.dataset.type === "task-item") {
+      e.target
+        .closest<HTMLElement>("[data-type='task-list']")!
+        .dataset.focusTaskId = e.target.id
+    }
+  }
+  
   return (
     <div
       role="application"
@@ -11,7 +226,9 @@ export default function Board() {
         aria-roledescription="board"
         aria-label="Platform Launch"
         data-type="task-board"
-        tabIndex={-1}>
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}>
         <div
           role="listbox"
           aria-roledescription="list"
