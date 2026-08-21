@@ -1,65 +1,160 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+export default function Board() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div
+      role="application"
+      aria-label="Kanban app"
+      tabIndex={-1}>
+      <div
+        role="group"
+        aria-roledescription="board"
+        aria-label="Platform Launch"
+        data-type="task-board"
+        tabIndex={-1}>
+        <div
+          role="listbox"
+          aria-roledescription="list"
+          aria-label="TO DO"
+          tabIndex={-1}
+          data-type="task-list">
+          <div aria-hidden="true">TO DO</div>
+          <div
+            role="option"
+            id="1"
+            tabIndex={-1}
+            data-type="task-item">
+            Build UI for onboarding flow
+          </div>
+          <div
+            role="option"
+            id="2"
+            tabIndex={-1}
+            data-type="task-item">
+            Build UI for search
+          </div>
+          <div
+            role="option"
+            id="3"
+            tabIndex={-1}
+            data-type="task-item">
+            Search prices
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div
+          role="listbox"
+          aria-roledescription="list"
+          aria-label="DOING"
+          tabIndex={-1}
+          data-type="task-list">
+          <div aria-hidden="true">DOING</div>
+          <div
+            role="option"
+            id="100"
+            tabIndex={-1}
+            data-type="task-item">
+            Finish review of WCAG
+          </div>
+          <div
+            role="option"
+            id="101"
+            tabIndex={-1}
+            data-type="task-item">
+            Finish review of ARIA
+          </div>
+          <div
+            role="option"
+            id="102"
+            tabIndex={-1}
+            data-type="task-item">
+            Learn how to use popular screen readers
+          </div>
         </div>
-      </main>
+
+        <div
+          role="listbox"
+          aria-roledescription="list"
+          aria-label="DONE"
+          tabIndex={-1}
+          data-type="task-list">
+          <div aria-hidden="true">DONE</div>
+          <div
+            role="option"
+            id="200"
+            tabIndex={-1}
+            data-type="task-item">
+            Learn ARIA APG
+          </div>
+          <div
+            role="option"
+            id="201"
+            tabIndex={-1}
+            data-type="task-item">
+            Read HTML AAM
+          </div>
+          <div
+            role="option"
+            id="202"
+            tabIndex={-1}
+            data-type="task-item">
+            Read Core AAM
+          </div>
+        </div>
+      </div>
+
+      {/* <dialog id="dialog-task-details">
+        <button commandfor="dialog-task-details" command="close">Close</button>
+        <dl>
+          <dt><strong>Title</strong></dt>
+          <dd>Research pricing points of various competitors and trial different business models</dd>
+          <dt><strong>Description</strong></dt>
+          <dd>We know what we&apos;re planning to build for version one. Now we need to finalise the first pricing model we&apos;ll use. Keep iterating the subtasks until we have a coherent proposition.</dd>
+          <dt><strong>Subtasks</strong></dt>
+          <dd><label><input type="checkbox" /> Research competitor pricing and business models</label></dd>
+          <dd><label><input type="checkbox" /> Outline a business model that works for our solution</label></dd>
+          <dd><label><input type="checkbox" /> Talk to potential customers about our proposed solution and ask for price expectancy</label></dd>
+        </dl>
+
+        <button commandfor="dialog-edit-task" command="show-modal">Edit</button>{" "}
+        <button commandfor="dialog-delete-task" command="show-modal">Delete</button>
+
+        <dialog id="dialog-edit-task">
+          <button commandfor="dialog-edit-task" command="close">Close</button>
+          <form method="dialog">
+            <p><label>Title <input type="text" /></label></p>
+            <p><label>Description <textarea></textarea></label></p>
+            <button>Save</button>
+          </form>
+        </dialog>
+
+        <dialog id="dialog-delete-task">
+          <p><strong>Delete this task?</strong></p>
+          <p>Are you sure you want to delete the <cite>Build settings UI</cite> task and its subtasks? This action cannot be reversed.</p>
+          <form method="dialog">
+            <button>Cancel</button>{" "}
+            <button>Delete</button>
+          </form>
+        </dialog>
+      </dialog>
+
+      <dialog id="dialog-add-task" aria-label="Add task">
+        <button commandfor="dialog-add-task" command="close">Close</button>
+        <form method="dialog">
+          <p><label>Title <input type="text" /></label></p>
+          <p><label>Description <textarea></textarea></label></p>
+          <button>Create</button>
+        </form>
+      </dialog>
+
+      <dialog id="dialog-delete-column">
+        <p><strong>Delete this column?</strong></p>
+        <p>Are you sure you want to delete the <cite>TO DO</cite> column and its tasks? This action cannot be reversed.</p>
+        <form method="dialog">
+          <button>Cancel</button>{" "}
+          <button>Delete</button>
+        </form>
+      </dialog> */}
     </div>
-  );
+  )
 }
