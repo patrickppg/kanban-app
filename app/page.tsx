@@ -1,8 +1,10 @@
 "use client"
 
-import { FocusEvent, KeyboardEvent } from "react"
+import { FocusEvent, KeyboardEvent, MouseEvent, useEffect, useRef } from "react"
 
 export default function Board() {
+  const refContextMenu = useRef<HTMLDivElement>(null)
+  const refMenuItem = useRef<HTMLDivElement>(null)
 
   function handleKeyDown(e: KeyboardEvent) {
     if (
@@ -215,6 +217,86 @@ export default function Board() {
         .dataset.focusTaskId = e.target.id
     }
   }
+
+  function handleContextMenu(e: MouseEvent) {
+    e.preventDefault()
+    if (!(e.target instanceof HTMLElement)) return
+    if (e.target.dataset.type !== "task-item") return
+
+    // refContextMenu.current?.hidePopover()
+    refContextMenu.current?.showPopover()
+  }
+
+  function handleMenuKeydown(e: KeyboardEvent) {
+    if (
+      e.key !== "ArrowUp" &&
+      e.key !== "ArrowDown" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight" &&
+      e.key !== "Home" &&
+      e.key !== "End" &&
+      e.key !== "PageUp" &&
+      e.key !== "PageDown" &&
+      e.key !== "Enter" &&
+      e.key !== " "
+    ) return
+    if (e.isComposing) return
+    if (!(e.target instanceof HTMLElement)) return
+    if (e.target.role !== "menuitem") return
+
+    e.preventDefault()
+    switch (e.key) {
+      case "ArrowUp": {
+        if (e.target.previousElementSibling) {
+          if (!(e.target.previousElementSibling instanceof HTMLElement)) return
+          e.target.previousElementSibling.focus()
+        } else {
+          if (!(e.currentTarget.lastElementChild instanceof HTMLElement)) return
+          e.currentTarget.lastElementChild?.focus()
+        }
+        break
+      }
+        
+      case "ArrowDown": {
+        if (e.target.nextElementSibling) {
+          if (!(e.target.nextElementSibling instanceof HTMLElement)) return
+          e.target.nextElementSibling.focus()
+        } else {
+          if (!(e.currentTarget.firstElementChild instanceof HTMLElement)) return
+          e.currentTarget.firstElementChild?.focus()
+        }
+        break
+      }
+
+      case "Home": {
+        if (!(e.currentTarget.firstElementChild instanceof HTMLElement)) return
+        e.currentTarget.firstElementChild?.focus()
+        break
+      }
+
+      case "End": {
+        if (!(e.currentTarget.lastElementChild instanceof HTMLElement)) return
+        e.currentTarget.lastElementChild?.focus()
+        break
+      }
+
+      case "Enter":
+      case " ": {
+        e.target.click()
+      }
+    }
+  }
+
+  function handleClick(e: MouseEvent) {
+    if (!(e.target instanceof HTMLElement)) return
+    if (e.target.role !== "menuitem") return
+
+    refContextMenu.current?.hidePopover()
+  }
+
+  useEffect(() => {
+    if (refMenuItem.current) refMenuItem.current.autofocus = true
+  }, [])
   
   return (
     <div
@@ -228,7 +310,8 @@ export default function Board() {
         data-type="task-board"
         tabIndex={-1}
         onKeyDown={handleKeyDown}
-        onFocus={handleFocus}>
+        onFocus={handleFocus}
+        onContextMenu={handleContextMenu}>
         <div
           role="listbox"
           aria-roledescription="list"
@@ -317,6 +400,18 @@ export default function Board() {
             data-type="task-item">
             Read Core AAM
           </div>
+        </div>
+
+        <div
+          role="menu"
+          popover="auto"
+          ref={refContextMenu}
+          onKeyDown={handleMenuKeydown}
+          onClick={handleClick}>
+          <div role="menuitem" tabIndex={-1} ref={refMenuItem}>Open</div>
+          <div role="menuitem" tabIndex={-1}>Rename</div>
+          <div role="menuitem" tabIndex={-1}>Move&hellip;</div>
+          <div role="menuitem" tabIndex={-1}>Delete</div>
         </div>
       </div>
 

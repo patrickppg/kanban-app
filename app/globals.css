@@ -25,7 +25,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 } */
 
-/* [data-type="task-board"] {
+[data-type="task-board"] {
+  border: 2px solid black;
   display: flex;
   padding: 2rem;
-} */
+}
